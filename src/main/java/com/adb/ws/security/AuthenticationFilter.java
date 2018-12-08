@@ -70,7 +70,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserDto userDto = userService.getUser(userName);
         
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        res.addHeader("UserID", userDto.getUserId());
+        res.addHeader("UserID", userDto.getUserId());//adding public userID so that client can add this with the request.
     }
     
 }
