@@ -2,6 +2,7 @@ package com.adb.ws.ui.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,10 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping(path="/{id}")
+	@GetMapping(path="/{id}", 
+			// Configure to return data in both xml and json
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+			)
 	public UserRest getUser(@PathVariable String id) {
 		
 		UserRest returnValue = new UserRest();
@@ -32,7 +36,12 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@PostMapping
+	@PostMapping(
+			// Configure to accept data in both xml and json
+			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE} ,
+			// Configure to return data in both xml and json
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+			)
 	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
 		
 		UserRest returnValue = new UserRest();
