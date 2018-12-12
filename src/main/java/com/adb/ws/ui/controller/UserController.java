@@ -17,6 +17,9 @@ import com.adb.ws.service.UserService;
 import com.adb.ws.shared.dto.UserDto;
 import com.adb.ws.ui.model.request.UserDetailsRequestModel;
 import com.adb.ws.ui.model.response.ErrorMessages;
+import com.adb.ws.ui.model.response.OperationStatusModel;
+import com.adb.ws.ui.model.response.RequestOperationName;
+import com.adb.ws.ui.model.response.RequestOperationStatus;
 import com.adb.ws.ui.model.response.UserRest;
 
 @RestController
@@ -77,8 +80,16 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@DeleteMapping
-	public String deleteUser() {
-		return "delete user was called";
+	@DeleteMapping(path="/{id}",
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public OperationStatusModel deleteUser(@PathVariable String id) {
+		
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.DELETE.name());
+		
+		userService.deleteUser(id);
+		returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		
+		return returnValue;
 	}
 }
