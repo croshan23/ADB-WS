@@ -30,6 +30,8 @@ public class AddressServiceImpl implements AddressService {
 		List<AddressDto> returnValue = new ArrayList<>();
 		
 		UserEntity userEntity = userRepository.findByUserId(userId);
+		// yo pachi sidhai userEntity.getAddresses() method use gare sabai address pai halcha
+		// but we are trying to use Spring JPA to get Addresses based on UserEntity by below codes
 		
 		if (userEntity == null) return returnValue;
 		

@@ -137,7 +137,7 @@ public class UserController {
 		List<AddressDto> addressDto = addressService.getAddresses(id);
 		
 		if(addressDto != null && !addressDto.isEmpty()) {
-			
+			// This is a way provided my ModelMapper to map(copy) between List as well
 			java.lang.reflect.Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
 			returnValue = new ModelMapper().map(addressDto, listType);
 		}
