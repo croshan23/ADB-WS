@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adb.ws.exceptions.UserServiceException;
+import com.adb.ws.service.AddressService;
 import com.adb.ws.service.UserService;
+import com.adb.ws.shared.dto.AddressDto;
 import com.adb.ws.shared.dto.UserDto;
 import com.adb.ws.ui.model.request.UserDetailsRequestModel;
+import com.adb.ws.ui.model.response.AddressesRest;
 import com.adb.ws.ui.model.response.ErrorMessages;
 import com.adb.ws.ui.model.response.OperationStatusModel;
 import com.adb.ws.ui.model.response.RequestOperationName;
@@ -33,6 +37,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	AddressService addressService;
 	
 	@GetMapping(path="/{id}", 
 			// Configure to return data in both xml and json
@@ -119,7 +126,23 @@ public class UserController {
 		return returnValue;
 	}
 	
-	
+	@GetMapping(path="/{id}/addresses", 
+			// Configure to return data in both xml and json
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+			)
+	public List<AddressesRest> getUserAddresses(@PathVariable String id) {
+		
+		List<AddressesRest> returnValue = new ArrayList<>();
+
+		List<AddressDto> addressDto = addressService.getAddresses(id);
+		
+		if(addressDto != null && !addressDto.isEmpty()) {
+			
+			java.lang.reflect.Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
+			returnValue = new ModelMapper().map(addressDto, listType);
+		}
+		return returnValue;
+	}
 	
 	
 	
