@@ -13,4 +13,6 @@ public interface AddressRepository extends CrudRepository<AddressEntity, Long>{
 	//Similarly, All mean all, By , UserDetails is a variable in AddressEntity
 	Iterable<AddressEntity> findAllByUserDetails(UserEntity userEntity);
 
+	AddressEntity findByAdddressId(String addressId);
+
 }
