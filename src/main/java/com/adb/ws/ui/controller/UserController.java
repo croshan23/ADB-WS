@@ -8,6 +8,9 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.http.MediaType;
@@ -131,9 +134,9 @@ public class UserController {
 	
 	@GetMapping(path="/{id}/addresses", 
 			// Configure to return data in both xml and json
-			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"}
 			)
-	public List<AddressesRest> getUserAddresses(@PathVariable String id) {
+	public Resources<AddressesRest> getUserAddresses(@PathVariable String id) {
 		
 		List<AddressesRest> addressListRestModel = new ArrayList<>();
 
@@ -152,14 +155,14 @@ public class UserController {
 				addressRest.add(userLink);
 			}
 		}
-		return addressListRestModel;
+		return new Resources<>(addressListRestModel);
 	}
 	
 	@GetMapping(path="/{userId}/addresses/{addressId}", 
 			// Configure to return data in both xml and json
-			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"}
 			)
-	public AddressesRest getUserAddress(@PathVariable String addressId, @PathVariable String userId) {
+	public Resource<AddressesRest> getUserAddress(@PathVariable String addressId, @PathVariable String userId) {
 		
 		AddressesRest returnValue = new AddressesRest();
 		
@@ -181,7 +184,7 @@ public class UserController {
 		returnValue.add(userLink);
 		returnValue.add(allAddressLink);
 		
-		return returnValue;
+		return new Resource<>(returnValue);
 	}
 	
 	
