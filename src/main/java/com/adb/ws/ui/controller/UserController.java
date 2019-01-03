@@ -7,6 +7,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +35,7 @@ import com.adb.ws.ui.model.response.RequestOperationStatus;
 import com.adb.ws.ui.model.response.UserRest;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
@@ -144,17 +147,32 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@GetMapping(path="/{id}/addresses/{addressId}", 
+	@GetMapping(path="/{userId}/addresses/{addressId}", 
 			// Configure to return data in both xml and json
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 			)
-	public AddressesRest getUserAddress(@PathVariable String addressId) {
+	public AddressesRest getUserAddress(@PathVariable String addressId, @PathVariable String userId) {
 		
 		AddressesRest returnValue = new AddressesRest();
 		
 		AddressDto addressDto = addressService.getAddress(addressId);
 		ModelMapper modelMapper = new ModelMapper();
+		
 		returnValue = modelMapper.map(addressDto, AddressesRest.class);
+		
+		// Adding links to other API services using HATEOAS concept
+		// Following are a way to create links but its lengthy. we are hardcoding everything with slash and all
+			//Link selfAddressLink = linkTo(UserController.class).slash(userId).slash("addresses")
+				//	.slash(addressId).withSelfRel();
+		// Following does same thing like above code but with less code :)
+		Link selfAddressLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressId)).withSelfRel();
+		Link userLink = linkTo(UserController.class).slash(userId).withRel("user");
+		Link allAddressLink = linkTo(methodOn(UserController.class).getUserAddresses(userId)).withRel("addresses");
+		
+		returnValue.add(selfAddressLink);
+		returnValue.add(userLink);
+		returnValue.add(allAddressLink);
+		
 		return returnValue;
 	}
 	
