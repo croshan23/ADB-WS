@@ -135,16 +135,24 @@ public class UserController {
 			)
 	public List<AddressesRest> getUserAddresses(@PathVariable String id) {
 		
-		List<AddressesRest> returnValue = new ArrayList<>();
+		List<AddressesRest> addressListRestModel = new ArrayList<>();
 
 		List<AddressDto> addressDto = addressService.getAddresses(id);
 		
 		if(addressDto != null && !addressDto.isEmpty()) {
 			// This is a way provided my ModelMapper to map(copy) between List as well
 			java.lang.reflect.Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
-			returnValue = new ModelMapper().map(addressDto, listType);
+			addressListRestModel = new ModelMapper().map(addressDto, listType);
+			
+			for(AddressesRest addressRest: addressListRestModel) {
+				
+				Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(id, addressRest.getAdddressId())).withRel("address");
+				addressRest.add(addressLink);
+				Link userLink = linkTo(methodOn(UserController.class).getUser(id)).withRel("user");
+				addressRest.add(userLink);
+			}
 		}
-		return returnValue;
+		return addressListRestModel;
 	}
 	
 	@GetMapping(path="/{userId}/addresses/{addressId}", 
