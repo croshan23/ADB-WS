@@ -10,6 +10,7 @@ import com.adb.ws.security.SecurityConstants;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class Utils {
@@ -35,6 +36,16 @@ public class Utils {
         return new String(returnValue);
     }
 
+	public String generateEmailVerificationToken(String publicUserId) {
+
+		String token = Jwts.builder()
+				.setSubject(publicUserId)
+				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+				.compact();
+		return token;
+	}
+	
 	public static boolean hasTokenExpired(String token) {
 
 		Claims claims = Jwts.parser()
@@ -46,5 +57,5 @@ public class Utils {
 		
 		return tokenExpirationDate.before(todayDate);
 	}
-    
+
 }
