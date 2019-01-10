@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
 		return returnValue;
 	}
 
+	// used by UserDetailService (class implemented by UserService) to check whether username/password is correct during login
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -75,7 +76,11 @@ public class UserServiceImpl implements UserService {
 		
 		if(userEntity == null) throw new UsernameNotFoundException(email);
 		
-		return new User (userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		// Changing User constructor type to check whether User is enabled or not by emailVerificationStatus parameter.
+		// Other parameter are just to suffice the constructor.
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(), 
+				true, true, true, new ArrayList<>());
+		//return new User (userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 	@Override
