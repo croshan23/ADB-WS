@@ -21,6 +21,7 @@ import com.adb.ws.repository.UserRepository;
 import com.adb.ws.service.UserService;
 import com.adb.ws.shared.dto.AddressDto;
 import com.adb.ws.shared.dto.UserDto;
+import com.adb.ws.shared.dto.utils.AmazonSES;
 import com.adb.ws.shared.dto.utils.Utils;
 import com.adb.ws.ui.model.response.ErrorMessages;
 
@@ -64,6 +65,9 @@ public class UserServiceImpl implements UserService {
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
 		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
+		
+		// Send email message to user to verify their email address
+		new AmazonSES().verifyEmail(returnValue);
 		
 		return returnValue;
 	}
