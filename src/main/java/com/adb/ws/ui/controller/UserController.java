@@ -47,6 +47,9 @@ public class UserController {
 	@Autowired
 	AddressService addressService;
 	
+	/*
+	 * Get user details based on ID
+	 */
 	@GetMapping(path="/{id}", 
 			// Configure to return data in both xml and json
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
@@ -59,6 +62,9 @@ public class UserController {
 		return returnValue;
 	}
 	
+	/*
+	 * Creates new user 
+	 */
 	@PostMapping(
 			// Configure to accept data in both xml and json
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE} ,
@@ -85,6 +91,9 @@ public class UserController {
 		return returnValue;
 	}
 	
+	/*
+	 * Update existing user based on ID
+	 */
 	@PutMapping(path="/{id}",
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE} ,
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
@@ -102,6 +111,9 @@ public class UserController {
 		return returnValue;
 	}
 	
+	/*
+	 * Delete user based on ID
+	 */
 	@DeleteMapping(path="/{id}",
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public OperationStatusModel deleteUser(@PathVariable String id) {
@@ -115,6 +127,9 @@ public class UserController {
 		return returnValue;
 	}
 	
+	/*
+	 * Get list of all users using pagination
+	 */
 	@GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public List<UserRest> getUsers(@RequestParam(value="page", defaultValue="0") int page,
 			@RequestParam(value="limit", defaultValue="25") int limit){
@@ -132,6 +147,9 @@ public class UserController {
 		return returnValue;
 	}
 	
+	/*
+	 * Get shipping and billing address of a user based on ID
+	 */
 	@GetMapping(path="/{id}/addresses", 
 			// Configure to return data in both xml and json
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"}
@@ -158,6 +176,9 @@ public class UserController {
 		return new Resources<>(addressListRestModel);
 	}
 	
+	/*
+	 * Get specific address of a user based on user ID and address ID
+	 */
 	@GetMapping(path="/{userId}/addresses/{addressId}", 
 			// Configure to return data in both xml and json
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"}
@@ -187,6 +208,9 @@ public class UserController {
 		return new Resource<>(returnValue);
 	}
 	
+	/*
+	 * Email Verification API
+	 */
 	@GetMapping(path="/email-verification", 
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/hal+json"}
 			)
