@@ -16,7 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.adb.ws.exceptions.UserServiceException;
+import com.adb.ws.io.entity.PasswordResetTokenEntity;
 import com.adb.ws.io.entity.UserEntity;
+import com.adb.ws.repository.PasswordResetTokenRepository;
 import com.adb.ws.repository.UserRepository;
 import com.adb.ws.service.UserService;
 import com.adb.ws.shared.dto.AddressDto;
@@ -30,6 +32,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	PasswordResetTokenRepository passwordResetTokenRepository;
 	
 	@Autowired
 	Utils utils;
