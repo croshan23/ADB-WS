@@ -46,6 +46,16 @@ public class Utils {
 		return token;
 	}
 	
+	public static String generatePasswordResetToken(String userId) {
+		
+		String token = Jwts.builder()
+				.setSubject(userId)
+				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+				.compact();
+		return token;
+	}
+	
 	public static boolean hasTokenExpired(String token) {
 
 		Claims claims = Jwts.parser()
@@ -57,5 +67,6 @@ public class Utils {
 		
 		return tokenExpirationDate.before(todayDate);
 	}
+
 
 }
