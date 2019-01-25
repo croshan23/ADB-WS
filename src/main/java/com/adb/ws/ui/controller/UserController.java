@@ -1,5 +1,8 @@
 package com.adb.ws.ui.controller;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +29,7 @@ import com.adb.ws.service.AddressService;
 import com.adb.ws.service.UserService;
 import com.adb.ws.shared.dto.AddressDto;
 import com.adb.ws.shared.dto.UserDto;
+import com.adb.ws.ui.model.request.PasswordResetRequestModel;
 import com.adb.ws.ui.model.request.UserDetailsRequestModel;
 import com.adb.ws.ui.model.response.AddressesRest;
 import com.adb.ws.ui.model.response.ErrorMessages;
@@ -231,8 +232,27 @@ public class UserController {
 		return returnValue;
 	}
 	
-	
-	
+	/*
+	 * Password Reset API
+	 */
+	@PostMapping(path = "/password-reset-request",
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public OperationStatusModel resetRequest(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+		
+		OperationStatusModel returnValue = new OperationStatusModel();
+		
+		boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+		
+		returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
+		returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+		
+		if (operationResult) {
+			returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		}
+		
+		return returnValue;
+	}
 	
 	
 	
