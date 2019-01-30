@@ -29,6 +29,7 @@ import com.adb.ws.service.AddressService;
 import com.adb.ws.service.UserService;
 import com.adb.ws.shared.dto.AddressDto;
 import com.adb.ws.shared.dto.UserDto;
+import com.adb.ws.ui.model.request.PasswordResetModel;
 import com.adb.ws.ui.model.request.PasswordResetRequestModel;
 import com.adb.ws.ui.model.request.UserDetailsRequestModel;
 import com.adb.ws.ui.model.response.AddressesRest;
@@ -233,7 +234,7 @@ public class UserController {
 	}
 	
 	/*
-	 * Password Reset API
+	 * Password Reset Request Service
 	 */
 	@PostMapping(path = "/password-reset-request",
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -254,8 +255,28 @@ public class UserController {
 		return returnValue;
 	}
 	
-	
-	
+	/*
+	 * Reset Password
+	 */
+	@PostMapping(path="/password-reset",
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+		
+		OperationStatusModel returnValue = new OperationStatusModel();
+		
+		boolean operationResult = userService.resetPassword(
+				passwordResetModel.getToken(), passwordResetModel.getPassword());
+		
+		returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+		returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+		
+		if (operationResult) {
+			returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		}
+		
+		return returnValue;
+	}
 	
 	
 	

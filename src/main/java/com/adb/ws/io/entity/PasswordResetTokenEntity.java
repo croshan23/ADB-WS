@@ -23,7 +23,7 @@ public class PasswordResetTokenEntity implements Serializable {
 	private String token;
 	
 	@OneToOne()
-	@JoinColumn(name = "users_id") // name is the column name of Users table in DB
+	@JoinColumn(name = "users_id") //users is a table, id is column of that table
 	private UserEntity userDetails;
 
 	public long getId() {
