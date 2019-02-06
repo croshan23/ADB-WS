@@ -1,5 +1,7 @@
 package com.adb.ws.shared.dto.utils;
 
+import org.springframework.stereotype.Service;
+
 import com.adb.ws.shared.dto.UserDto;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
@@ -11,6 +13,7 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 
+@Service
 public class AmazonSES {
 	// This address must be verified with Amazon SES.
 	final String FROM = "rchaudhary@mum.edu";
