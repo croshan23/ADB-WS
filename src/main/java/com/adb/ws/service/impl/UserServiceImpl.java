@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 		
 		//checking if the record already exists. 2nd way to prevent duplicate
 		if (userRepository.findByEmail(user.getEmail()) != null) 
-			throw new RuntimeException("Record already exists!");
+			throw new UserServiceException("Record already exists!");
 		
 		for(int i=0; i<user.getAddresses().size(); i++) {
 			AddressDto address = user.getAddresses().get(i);

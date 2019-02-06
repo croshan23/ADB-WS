@@ -25,6 +25,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.adb.ws.exceptions.UserServiceException;
 import com.adb.ws.io.entity.AddressEntity;
 import com.adb.ws.io.entity.UserEntity;
 import com.adb.ws.repository.UserRepository;
@@ -55,6 +56,7 @@ class UserServiceImplTest {
 	String userPassword = "4849dmd44dldk";
 	
 	UserEntity userEntity; //// Stub object, hard coded object created for testing
+	UserDto userDto;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -71,6 +73,13 @@ class UserServiceImplTest {
 		userEntity.setEmail("test@test.com");
 		userEntity.setEmailVerificationToken("7htnfhr758");
 		userEntity.setAddresses(getAddressesEntity());
+		
+		userDto = new UserDto();
+		userDto.setAddresses(getAddressesDto());
+		userDto.setFirstName("Roshan");
+		userDto.setLastName("Chaudhary");
+		userDto.setPassword("12345678");
+		userDto.setEmail("test@test.com");
 	}
 
 	@Test
@@ -101,6 +110,15 @@ class UserServiceImplTest {
 	}
 	
 	@Test
+	void testCreateUser_UserServiceException() {
+		
+		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+		assertThrows(UserServiceException.class, () -> {
+			userServiceImpl.createUser(userDto);
+		});
+	}
+	
+	@Test
 	final void testCreateUser() {
 		
 		//Mockito: when...then... type
@@ -112,12 +130,7 @@ class UserServiceImplTest {
 		//Mockito: doNothing...when type
 		Mockito.doNothing().when(amazonSES).verifyEmail(any(UserDto.class));
  		
-		UserDto userDto = new UserDto();
-		userDto.setAddresses(getAddressesDto());
-		userDto.setFirstName("Roshan");
-		userDto.setLastName("Chaudhary");
-		userDto.setPassword("12345678");
-		userDto.setEmail("test@test.com");
+
 
 		UserDto storedUserDetails = userServiceImpl.createUser(userDto);
 		//JUnit5: asserts
