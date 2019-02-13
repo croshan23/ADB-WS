@@ -9,8 +9,12 @@ import org.springframework.stereotype.Component;
 import com.adb.ws.security.SecurityConstants;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class Utils {
@@ -58,14 +62,23 @@ public class Utils {
 	
 	public static boolean hasTokenExpired(String token) {
 
-		Claims claims = Jwts.parser()
-				.setSigningKey(SecurityConstants.getTokenSecret())
-				.parseClaimsJws(token).getBody();
+		boolean returnValue = false;
 		
-		Date tokenExpirationDate = claims.getExpiration();
-		Date todayDate = new Date();
+		try {
+			Claims claims = Jwts.parser()
+					.setSigningKey(SecurityConstants.getTokenSecret())
+					.parseClaimsJws(token).getBody();
+			
+			Date tokenExpirationDate = claims.getExpiration();
+			Date todayDate = new Date();
+			returnValue = tokenExpirationDate.before(todayDate);
+			
+		} catch (ExpiredJwtException e) {
+			returnValue = true;
+			e.printStackTrace();
+		}
 		
-		return tokenExpirationDate.before(todayDate);
+		return returnValue;
 	}
 
 
