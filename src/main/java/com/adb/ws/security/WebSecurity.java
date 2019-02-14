@@ -36,11 +36,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         .permitAll() 
         .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
         .permitAll()
+        .antMatchers(SecurityConstants.H2_CONSOLE)
+        .permitAll()
         .anyRequest().authenticated().and()
         .addFilter(getAuthenticationFilter())//add authenticationFilter
         .addFilter(new AuthorizationFilter(authenticationManager()))//addAuthorizationFilter
         .sessionManagement()//access sessionManagement
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//making rest stateless
+        
+        // disable the ability to load our page by others in html iframe
+        http.headers().frameOptions().disable();
     }
 
     @Override

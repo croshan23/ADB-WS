@@ -81,6 +81,14 @@
 			<artifactId>aws-java-sdk-ses</artifactId>
 			<version>1.11.479</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<!--Scope is runtime as we need this dependencies for runtime activity. if we need it for test then
+			scope would be ->  <scope>test</scope> -->
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 
